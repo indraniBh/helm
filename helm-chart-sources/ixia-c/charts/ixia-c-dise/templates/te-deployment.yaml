@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.global.image2.name }}
+  labels:
+    {{- include "ixia-c-dise.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.global.image2.replicaCount }}
+  strategy:
+    type: Recreate
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "ixia-c-dise.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "ixia-c-dise.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      hostNetwork: true
+      #serviceAccountName: {{ include "ixia-c-dise.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Values.global.image2.name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.global.image2.repository }}:{{ .Values.global.image2.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.global.image2.pullPolicy }}
+          ports:
+            - containerPort: {{.Values.global.trafficEnginePort1}}
+          livenessProbe:
+            tcpSocket: 
+              port: {{.Values.global.trafficEnginePort1}}
+            initialDelaySeconds: 10
+            periodSeconds: 1
+          readinessProbe:
+            tcpSocket:
+              port: {{.Values.global.trafficEnginePort1}}
+            initialDelaySeconds: 10
+            periodSeconds: 20
+          resources:
+            {{- toYaml .Values.global.image2.resources | nindent 12 }}
+          env:
+            - name: OPT_LISTEN_PORT
+              value: "{{- .Values.global.trafficEnginePort1 }}"
+            - name: ARG_IFACE_LIST
+              value: "virtual@af_packet,{{.Values.global.egressDevice1}}"
+            - name: OPT_NO_HUGEPAGES
+              value: "Yes"
+            - name: OPT_NO_RX
+              value: "Yes"
+      initContainers:
+        - name: "{{ .Values.global.egressInitJob.name }}"
+          stdin: true
+          tty: true
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.global.egressInitJob.repository }}"
+          imagePullPolicy: {{ .Values.global.egressInitJob.pullPolicy }}
+          resources:
+            {{- toYaml .Values.global.image2.resources | nindent 12 }}
+          command: ["/bin/sh", "-c"]
+          args:
+            - interface={{- .Values.egressDevice }};
+              for i in $(seq 1 5); do 
+                result=`ip link show $interface | grep UP | wc -l`; 
+                if [[ $result -eq 1 ]]; then 
+                  break; 
+                fi; 
+                ip link set $interface up;
+                sleep 0.5; 
+              done;       
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      

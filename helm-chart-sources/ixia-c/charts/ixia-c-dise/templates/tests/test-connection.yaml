@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "ixia-c-dise.fullname" . }}-test-connection"
+  labels:
+    {{- include "ixia-c-dise.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['{{ include "ixia-c-dise.fullname" . }}:{{ .Values.service.port }}']
+  restartPolicy: Never

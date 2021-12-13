@@ -1,0 +1,56 @@
+# Default values for ixia-c.
+# Default values for shrinkray-athena-svc.
+global:
+  image1:
+    repository: ixiacom/ixia-c-controller
+    pullPolicy: IfNotPresent
+    tag: 0.0.1-2399
+    name: ixia-c-svc
+    replicaCount: 1
+  image2:
+    repository: ixiacom/ixia-c-traffic-engine
+    pullPolicy: IfNotPresent
+    tag: 1.4.0.15
+    name: te-svc
+    replicaCount: 1
+    # reserve a full CPU for athena traffic engine
+    resources:
+      limits:
+        cpu: "1"
+        memory: "500Mi"
+  egressInitJob:
+    name: shrinkray-athena-egress-init-job
+    # bcm has iptools installed, so we use it to run the script
+    repository: docker-remote.artifactorylbj.it.keysight.com/busybox:latest
+    pullPolicy: IfNotPresent
+    tag: 
+  egressDevice1: veth1
+  egressDevice2: veth2
+  trafficEnginePort1: 5555
+  trafficEnginePort2: 5556
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+podAnnotations: {}
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+securityContext:
+  privileged: true
+  capabilities:
+    add:
+      - NET_ADMIN
+      - SYS_ADMIN
+      - SYS_RAWIO
+      - NET_RAW
+service:
+  type: ClusterIP
+  port: 8080
+ingress:
+  enabled: false
+autoscaling:
+  enabled: false
+nodeSelector: {}
+tolerations: []
+affinity: {}

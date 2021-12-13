@@ -1,0 +1,30 @@
+# Default values for ixia-c-dise.
+enabled: true
+egressDevice: enp5s0f0
+trafficEnginePort: 5555
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+podAnnotations: {}
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+securityContext:
+  privileged: true
+  capabilities:
+    add:
+      - NET_ADMIN
+      - SYS_ADMIN
+      - SYS_RAWIO
+      - NET_RAW
+service:
+  type: ClusterIP
+  port: 8080
+ingress:
+  enabled: false
+autoscaling:
+  enabled: false
+nodeSelector: {}
+tolerations: []
+affinity: {}
