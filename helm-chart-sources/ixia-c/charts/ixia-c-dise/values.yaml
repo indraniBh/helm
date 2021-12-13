@@ -1,5 +1,4 @@
 # Default values for ixia-c-dise.
-enabled: true
 egressDevice: enp5s0f0
 trafficEnginePort: 5555
 imagePullSecrets: []
@@ -28,3 +27,5 @@ autoscaling:
 nodeSelector: {}
 tolerations: []
 affinity: {}
+global:
+  enabled: false

@@ -8,5 +8,5 @@ dependencies:
     condition: ixia-c-b2b.enabled
   - name: ixia-c-dise
     condition: ixia-c-dise.enabled
-version: 0.1.0
+version: 0.1.1
 appVersion: 0.0.0
