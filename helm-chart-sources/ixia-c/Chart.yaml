@@ -2,6 +2,9 @@ apiVersion: v2
 name: ixia-c
 description: |
   description: ixia-c Packet Generation Services
+  subcharts: 
+    -ixia-c-b2b
+    -ixia-c-dise
 type: application
 dependencies:
   - name: ixia-c-b2b
