@@ -54,3 +54,7 @@ autoscaling:
 nodeSelector: {}
 tolerations: []
 affinity: {}
+ixia-c-b2b:
+  enabled: false
+ixia-c-dise:
+  enabled: false
