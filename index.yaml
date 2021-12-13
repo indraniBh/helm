@@ -16,7 +16,7 @@ entries:
     name: ixia-c
     type: application
     urls:
-    - https://github.com/indraniBh/helm/ixia-c-0.1.1.tgz
+    - https://indranibh.github.io/helm/ixia-c-0.1.1.tgz
     version: 0.1.1
   - apiVersion: v2
     appVersion: 0.0.0
@@ -33,6 +33,6 @@ entries:
     name: ixia-c
     type: application
     urls:
-    - https://github.com/indraniBh/helm/ixia-c-0.1.0.tgz
+    - https://indranibh.github.io/helm/ixia-c-0.1.0.tgz
     version: 0.1.0
 generated: "2021-12-13T14:02:42.755052699Z"
