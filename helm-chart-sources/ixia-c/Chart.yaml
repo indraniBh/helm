@@ -12,4 +12,4 @@ dependencies:
   - name: ixia-c-dise
     condition: ixia-c-dise.enabled
 version: 0.1.2
-appVersion: 0.0.1-2467
+appVersion: 0.0.1-2446
