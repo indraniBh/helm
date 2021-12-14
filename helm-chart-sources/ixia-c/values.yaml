@@ -4,7 +4,7 @@ global:
   image1:
     repository: ixiacom/ixia-c-controller
     pullPolicy: IfNotPresent
-    tag: 0.0.1-2399
+    tag: 0.0.1-2467
     name: ixia-c-svc
     replicaCount: 1
   image2:
